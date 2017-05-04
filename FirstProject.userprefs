@@ -1,0 +1,20 @@
+﻿<Properties StartupConfiguration="{93592DFA-4871-4BF4-B0CB-DE20734F9624}|Default">
+  <MonoDevelop.Ide.Workbench>
+    <Files>
+      <File FileName="FirstProject/Controller/Game1.cs" Line="527" Column="4" />
+      <File FileName="FirstProject/Model/Enemy.cs" Line="5" Column="25" />
+      <File FileName="FirstProject/Model/Player.cs" Line="5" Column="25" />
+      <File FileName="FirstProject/View/ParallaxingBackground.cs" Line="6" Column="31" />
+      <File FileName="FirstProject/View/Animation.cs" Line="7" Column="31" />
+      <File FileName="FirstProject/Model/Projectile.cs" Line="69" Column="4" />
+      <File FileName="FirstProject/Controller/Program.cs" Line="21" Column="42" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.FirstProject PreferredExecutionTarget="MonoDevelop.Default" />
+  <MultiItemStartupConfigurations />
+</Properties>
