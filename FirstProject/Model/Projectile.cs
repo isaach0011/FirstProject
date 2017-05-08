@@ -20,6 +20,7 @@ namespace FirstProject.Model
 		// The amount of damage the projectile can inflict to an enemy
 		public int Damage;
 
+		public int n;
 		// Represents the viewable boundary of the game
 		Viewport viewport;
 
@@ -46,10 +47,10 @@ namespace FirstProject.Model
 			this.viewport = viewport;
 
 			Active = true;
-
+			n = 5;
 			Damage = 2;
 
-			projectileMoveSpeed = 20f;
+			projectileMoveSpeed = 100f;
 		}
 
 		public void Update()
@@ -64,8 +65,17 @@ namespace FirstProject.Model
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
+			if(n == 5)
+			{
+				n = -5;
+			}
+
+			if(n == -5)
+			{
+				n = 5;
+			}
 			spriteBatch.Draw(Texture, Position, null, Color.White, 0f,
-			new Vector2(Width / 2, Height / 2), 1f, SpriteEffects.None, 0f);
+			new Vector2(Width / n, Height / n), 1f, SpriteEffects.None, 0f);
 		}
 
 	}
