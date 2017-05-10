@@ -23,6 +23,7 @@ namespace FirstProject.Model
 		// Represents the viewable boundary of the game
 		Viewport viewport;
 
+		public int deg;
 		// Get the width of the projectile ship
 		public int Width
 		{

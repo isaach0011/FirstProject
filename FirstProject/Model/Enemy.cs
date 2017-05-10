@@ -61,8 +61,8 @@ namespace FirstProject.Model
             Damage = 10;
 
             // Set how fast the enemy moves 6 ----------------------
-//            enemyMoveSpeed = 6f;
-			enemyMoveSpeed = 0.5f;
+            enemyMoveSpeed = 10f;
+		//	enemyMoveSpeed = 0.5f;
 
 
             // Set the score value of the enemy

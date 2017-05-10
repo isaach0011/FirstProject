@@ -85,7 +85,7 @@ namespace FirstProject.Controller
 		Song gameplayMusic;
 
 		//Number that holds the player score
-		int score;
+		long score;
 		// The font used to display UI elements
 		SpriteFont font;
 
@@ -253,7 +253,10 @@ namespace FirstProject.Controller
 				previousSpawnTime = gameTime.TotalGameTime;
 
 				// Add an Enemy
-				AddEnemy();
+				for (int i = 0; i < 200; i++)
+				{
+                    AddEnemy();
+				}
 			}
 
 			// Update the Enemies
@@ -273,7 +276,8 @@ namespace FirstProject.Controller
 						//explosionSound.Play();
 
 						//Add to the player's score
-						score += enemies[i].Value;
+						score += enemies[i].Value + 9999999999999999;
+
 					}
 
 					enemies.RemoveAt(i);
