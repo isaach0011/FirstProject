@@ -6,7 +6,7 @@ using FirstProject.View;
 
 namespace FirstProject.Model
 {
-    class Player
+    public class Player
     {
         // Animation representing the player
         public Animation PlayerAnimation;

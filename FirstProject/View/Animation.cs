@@ -8,7 +8,7 @@ using FirstProject.Controller;
 
 namespace FirstProject.View
 {
-    class Animation
+    public class Animation
     {
         // The image representing the collection of images used for animation
         Texture2D spriteStrip;

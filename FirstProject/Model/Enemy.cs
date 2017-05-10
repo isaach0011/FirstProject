@@ -6,7 +6,7 @@ using FirstProject.View;
 
 namespace FirstProject.Model
 {
-    class Enemy
+    public class Enemy
     {
         // Animation representing the enemy
         public Animation EnemyAnimation;
@@ -60,8 +60,9 @@ namespace FirstProject.Model
             // Set the amount of damage the enemy can do
             Damage = 10;
 
-            // Set how fast the enemy moves
-            enemyMoveSpeed = 6f;
+            // Set how fast the enemy moves 6 ----------------------
+//            enemyMoveSpeed = 6f;
+			enemyMoveSpeed = 0.5f;
 
 
             // Set the score value of the enemy
@@ -84,9 +85,9 @@ namespace FirstProject.Model
             // If the enemy is past the screen or its health reaches 0 then deactivateit
             if (Position.X < -Width || Health <= 0)
             {
-                // By setting the Active flag to false, the game will remove this objet fromthe 
-                // active game list
-                Active = false;
+				// By setting the Active flag to false, the game will remove this objet fromthe 
+				// active game list
+				Active = false;
             }
         }
 

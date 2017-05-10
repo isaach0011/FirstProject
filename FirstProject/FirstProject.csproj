@@ -45,6 +45,8 @@
     <Compile Include="Model\Player.cs" />
     <Compile Include="View\Animation.cs" />
     <Compile Include="Model\Projectile.cs" />
+    <Compile Include="Model\RocketProjectile.cs" />
+    <Compile Include="Model\MegaProjectile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest" />

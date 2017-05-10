@@ -7,7 +7,7 @@ using FirstProject.Controller;
 
 namespace FirstProject.View
 {
-    class ParallaxingBackground
+    public class ParallaxingBackground
     {
 
         // The image representing the parallaxing background

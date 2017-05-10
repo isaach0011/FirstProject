@@ -56,9 +56,18 @@ namespace FirstProject.Controller
 		Texture2D projectileTexture;
 		List<Projectile> projectiles;
 
+		Texture2D rocketProjectileTexture;
+		List<RocketProjectile> rocketProjectiles;
+
+		Texture2D megaProjectileTexture;
+		List<MegaProjectile> megaProjectiles;
+
 		// The rate of fire of the player laser
 		TimeSpan fireTime;
 		TimeSpan previousFireTime;
+
+		TimeSpan ultraFireTime;
+		TimeSpan previousUltraFireTime;
 
 		// Explosion graphics list
 		Texture2D explosionTexture;
@@ -111,14 +120,22 @@ namespace FirstProject.Controller
 
 			// Set the time keepers to zero
 			previousSpawnTime = TimeSpan.Zero;
+			previousUltraFireTime = TimeSpan.Zero;
 
-			// Used to determine how fast enemy respawns
-			enemySpawnTime = TimeSpan.FromSeconds(1.0f);
+			// Used to determine how fast enemy respawns 1.0---------------------------
+			//enemySpawnTime = TimeSpan.FromSeconds(1.0f);
+			enemySpawnTime = TimeSpan.FromSeconds(.001f);
+
+			ultraFireTime = TimeSpan.FromSeconds(5f);
 
 			// Initialize our random number generator
 			random = new Random();
 
 			projectiles = new List<Projectile>();
+
+			rocketProjectiles = new List<RocketProjectile>();
+
+			megaProjectiles = new List<MegaProjectile>();
 
 			// Set the laser to fire every quarter second
 			fireTime = TimeSpan.FromSeconds(.15f);
@@ -162,6 +179,10 @@ namespace FirstProject.Controller
 			projectileTexture = Content.Load<Texture2D>("Texture/laser");
 
 			explosionTexture = Content.Load<Texture2D>("Animation/explosion");
+
+			rocketProjectileTexture = Content.Load<Texture2D>("Texture/rocketAnimation");
+
+			megaProjectileTexture = Content.Load<Texture2D>("Texture/megalazer");
 
 			// Load the music
 			gameplayMusic = Content.Load<Song>("Sound/gameMusic");
@@ -208,7 +229,7 @@ namespace FirstProject.Controller
 			// Create the animation object
 			Animation enemyAnimation = new Animation();
 
-			// Initialize the animation with the correct animation information
+			// Initialize the animation with the correct animation information 47 61
 			enemyAnimation.Initialize(enemyTexture, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
 
 			// Randomly generate the position of the enemy
@@ -220,7 +241,7 @@ namespace FirstProject.Controller
 			// Initialize the enemy
 			enemy.Initialize(enemyAnimation, position);
 
-			// Add the enemy to the active enemies list
+			// Add the enemy to the active enemiesUpdateRocketProjectiles() list
 			enemies.Add(enemy);
 		}
 
@@ -249,7 +270,7 @@ namespace FirstProject.Controller
 						AddExplosion(enemies[i].Position);
 
 						// Play the explosion sound
-						explosionSound.Play();
+						//explosionSound.Play();
 
 						//Add to the player's score
 						score += enemies[i].Value;
@@ -272,11 +293,25 @@ namespace FirstProject.Controller
 			}
 		}
 
+		private void AddMegaProjectile(Vector2 position)
+		{
+			MegaProjectile megaProjectile = new MegaProjectile();
+			megaProjectile.Initialize(GraphicsDevice.Viewport, megaProjectileTexture, position);
+			megaProjectiles.Add(megaProjectile);
+		}
+
 		private void AddProjectile(Vector2 position)
 		{
 			Projectile projectile = new Projectile();
 			projectile.Initialize(GraphicsDevice.Viewport, projectileTexture, position);
 			projectiles.Add(projectile);
+		}
+
+		private void AddRocketProjectile(Vector2 position)
+		{
+			RocketProjectile rocketProjectile = new RocketProjectile();
+			rocketProjectile.Initialize(GraphicsDevice.Viewport, rocketProjectileTexture, position);
+			rocketProjectiles.Add(rocketProjectile);
 		}
 
 		private void UpdateProjectiles()
@@ -293,7 +328,35 @@ namespace FirstProject.Controller
 			}
 		}
 
+		private void UpdateMegaProjectiles()
+		{
+			// Update the Projectiles
+			for (int i = megaProjectiles.Count - 1; i >= 0; i--)
+			{
+				megaProjectiles[i].Update();
 
+				if (megaProjectiles[i].Active == false)
+				{
+					megaProjectiles.RemoveAt(i);
+				}
+
+			}
+		}
+
+		private void UpdateRocketProjectiles()
+		{
+			// Update the Projectiles
+			for (int i = rocketProjectiles.Count - 1; i >= 0; i--)
+			{
+				rocketProjectiles[i].Update();
+
+				if (rocketProjectiles[i].Active == false)
+				{
+					rocketProjectiles.RemoveAt(i);
+				}
+
+			}
+		}
 		/// <summary>
 		/// UnloadContent will be called once per game and is the place to unload
 		/// all content.
@@ -337,6 +400,10 @@ namespace FirstProject.Controller
 
 			// Update the projectiles
 			UpdateProjectiles();
+
+			UpdateRocketProjectiles();
+
+			UpdateMegaProjectiles();
 
 			// Update the explosions
 			UpdateExplosions(gameTime);
@@ -385,7 +452,20 @@ namespace FirstProject.Controller
 				player.Position.Y += playerMoveSpeed;
 			}
 
+			if (currentKeyboardState.IsKeyDown(Keys.Q))
+			{
+                AddMegaProjectile(player.Position + new Vector2(player.Width / 2, 0));
+			}
 
+			if (gameTime.TotalGameTime - previousUltraFireTime > ultraFireTime)
+			{
+				if (currentKeyboardState.IsKeyDown(Keys.Space))
+				{
+					AddRocketProjectile(player.Position + new Vector2(player.Width / 2, 0));
+
+					previousUltraFireTime = gameTime.TotalGameTime;
+				}
+			}
 			// Make sure that the player does not go out of bounds
 			player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
 			player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
@@ -474,6 +554,51 @@ namespace FirstProject.Controller
 					}
 				}
 			}
+
+			// MEGA Projectile vs Enemy Collision
+			for (int i = 0; i < megaProjectiles.Count; i++)
+			{
+				for (int j = 0; j < enemies.Count; j++)
+				{
+					// Create the rectangles we need to determine if we collided with each other
+					rectangle1 = new Rectangle((int)megaProjectiles[i].Position.X -
+					megaProjectiles[i].Width / 2, (int)megaProjectiles[i].Position.Y -
+					megaProjectiles[i].Height / 2, megaProjectiles[i].Width, megaProjectiles[i].Height);
+
+					rectangle2 = new Rectangle((int)enemies[j].Position.X - enemies[j].Width / 2,
+					(int)enemies[j].Position.Y - enemies[j].Height / 2,
+					enemies[j].Width, enemies[j].Height);
+
+					// Determine if the two objects collided with each other
+					if (rectangle1.Intersects(rectangle2))
+					{
+						enemies[j].Health -= megaProjectiles[i].Damage;
+						megaProjectiles[i].Active = true;
+					}
+				}
+			}
+
+			for (int i = 0; i < rocketProjectiles.Count; i++)
+			{
+				for (int j = 0; j < enemies.Count; j++)
+				{
+					// Create the rectangles we need to determine if we collided with each other
+					rectangle1 = new Rectangle((int)rocketProjectiles[i].Position.X -
+					rocketProjectiles[i].Width / 2, (int)rocketProjectiles[i].Position.Y -
+					rocketProjectiles[i].Height / 2, rocketProjectiles[i].Width, rocketProjectiles[i].Height);
+
+					rectangle2 = new Rectangle((int)enemies[j].Position.X - enemies[j].Width / 2,
+					(int)enemies[j].Position.Y - enemies[j].Height / 2,
+					enemies[j].Width, enemies[j].Height);
+
+					// Determine if the two objects collided with each other
+					if (rectangle1.Intersects(rectangle2))
+					{
+						enemies[j].Health -= rocketProjectiles[i].Damage;
+						rocketProjectiles[i].Active = false;
+					}
+				}
+			}
 		}
 
 
@@ -509,6 +634,19 @@ namespace FirstProject.Controller
 				projectiles[i].Draw(spriteBatch);
 			}
 
+			// Draw the Projectiles
+			for (int i = 0; i<megaProjectiles.Count; i++)
+			{
+				megaProjectiles[i].Draw(spriteBatch);
+			}
+
+
+			// Draw the Projectiles
+			for (int i = 0; i < rocketProjectiles.Count; i++)
+			{
+				rocketProjectiles[i].Draw(spriteBatch);
+			}
+
 			// Draw the explosions
 			for (int i = 0; i < explosions.Count; i++)
 			{
@@ -523,7 +661,7 @@ namespace FirstProject.Controller
 			//Stop drawing
 			spriteBatch.End();
 
-			base.Draw(gameTime);   
+			base.Draw(gameTime);
 		}
 	}
 }
